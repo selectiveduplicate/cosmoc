@@ -6,9 +6,10 @@ import (
 )
 
 func main() {
+	fmt.Println("Welcome to Cosmoc v0.1a, the lamest thing ever!")
+	var input string
 	for {
-		var input string
-		fmt.Print("Welcome to Cosmoc v0.1a, the lamest thing ever!\ncalc>>")
+		fmt.Print("cosmoc>>")
 		fmt.Scanln(&input)
 		interpreter := lexer.NewInterpreter(input, 0, nil, string(input[0]))
 		output := interpreter.Expression()
