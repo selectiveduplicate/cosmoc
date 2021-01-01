@@ -15,8 +15,8 @@ type Interpreter struct {
 }
 
 // NewInterpreter returns a new Interpreter instance
-func NewInterpreter(text string, position int, currentToken *token.Token, currentChar string) Interpreter {
-	return Interpreter{text, position, currentToken, currentChar}
+func NewInterpreter(text string, position int, currentToken *token.Token, currentChar string) *Interpreter {
+	return &Interpreter{text, position, currentToken, currentChar}
 }
 
 // IsNumeric determines whether the current char
