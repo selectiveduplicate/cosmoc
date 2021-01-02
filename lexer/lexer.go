@@ -85,6 +85,11 @@ func (i *Interpreter) GetNextToken() *token.Token {
 			token := token.Token{Type: token.PLUS, Value: i.currentChar}
 			return &token
 		}
+		if i.currentChar == "-" {
+			i.Advance()
+			token := token.Token{Type: token.MINUS, Value: i.currentChar}
+			return &token
+		}
 		if i.IsNumeric() {
 			token := token.Token{Type: token.INTEGER, Value: i.MakeStrInt()}
 			return &token
@@ -96,8 +101,8 @@ func (i *Interpreter) GetNextToken() *token.Token {
 
 // Eat compares the currentToken with the passed one
 // and calls to get the next token
-func (i *Interpreter) Eat(t *token.Token) {
-	if i.currentToken.Type == t.Type {
+func (i *Interpreter) Eat(t token.TokenType) {
+	if i.currentToken.Type == t {
 		i.currentToken = i.GetNextToken()
 	} else {
 		i.RaiseError()
@@ -109,16 +114,23 @@ func (i *Interpreter) Expression() int {
 	i.currentToken = i.GetNextToken()
 
 	left := i.currentToken
-	i.Eat(left)
+	i.Eat(token.INTEGER)
 
 	operator := i.currentToken
-	i.Eat(operator)
+	if operator.Type == token.PLUS {
+		i.Eat(token.PLUS)
+	} else {
+		i.Eat(token.MINUS)
+	}
 
 	right := i.currentToken
-	i.Eat(right)
+	i.Eat(token.INTEGER)
 
 	leftValue, _ := strconv.Atoi(left.Value)
 	rightValue, _ := strconv.Atoi(right.Value)
 
-	return leftValue + rightValue
+	if operator.Type == token.PLUS {
+		return leftValue + rightValue
+	}
+	return leftValue - rightValue
 }

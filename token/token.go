@@ -27,6 +27,7 @@ import "fmt"
 const (
 	INTEGER = "INTEGER"
 	PLUS    = "PLUS"
+	MINUS   = "MINUS"
 	EOF     = "EOF"
 )
 
