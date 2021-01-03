@@ -26,6 +26,7 @@ import (
 	"errors"
 	"github.com/selectiveduplicate/cosmoc/token"
 	"strconv"
+	"unicode"
 )
 
 // Interpreter is the lexer struct
@@ -67,6 +68,13 @@ func (i *Interpreter) Advance() {
 	}
 }
 
+// SkipWhiteSpace skips whitespaces
+func (i *Interpreter) SkipWhiteSpace() {
+	for i.currentChar != "" && unicode.IsSpace([]rune(i.currentChar)[0]) {
+		i.Advance()
+	}
+}
+
 // MakeStrInt returns a stringified multi-digit integer
 func (i *Interpreter) MakeStrInt() string {
 	var strResult string
@@ -80,6 +88,10 @@ func (i *Interpreter) MakeStrInt() string {
 // GetNextToken spits out the next Token
 func (i *Interpreter) GetNextToken() *token.Token {
 	for i.currentChar != "" {
+		if unicode.IsSpace([]rune(i.currentChar)[0]) {
+			i.SkipWhiteSpace()
+			continue
+		}
 		if i.currentChar == "+" {
 			i.Advance()
 			token := token.Token{Type: token.PLUS, Value: i.currentChar}
@@ -95,8 +107,7 @@ func (i *Interpreter) GetNextToken() *token.Token {
 			return &token
 		}
 	}
-	i.RaiseError()
-	return nil
+	return &token.Token{Type: token.EOF, Value: ""}
 }
 
 // Eat compares the currentToken with the passed one
